@@ -1,39 +1,86 @@
 @HotelListingAPI_HostAddress = https://localhost:7262
+@json = application/json
 
-
-GET {{HotelListingAPI_HostAddress}}/api/hotels
+GET {{HotelListingAPI_HostAddress}}/api/country
 
 ###
 
-POST {{HotelListingAPI_HostAddress}}/api/hotels
+POST {{HotelListingAPI_HostAddress}}/api/country
 Content-Type: application/json
 
 {
-  "id": 5,
-  "name": "New Hotel",
-  "address": "New Street 11",
-  "rating": 4.3  
+  "name":"Austria",
+  "shortName":"AUT"
 }
 
 ###
 
-@id=1
-DELETE {{HotelListingAPI_HostAddress}}/api/hotels/{{id}}
+DELETE {{HotelListingAPI_HostAddress}}/api/country/{{id}}
 
 ###
-@id=5
-GET {{HotelListingAPI_HostAddress}}/api/hotels/{{id}}
+
+GET {{HotelListingAPI_HostAddress}}/api/country/{{id}}
 
 ###
-@id=5
-PUT {{HotelListingAPI_HostAddress}}/api/hotels/{{id}}
+
+PUT {{HotelListingAPI_HostAddress}}/api/country/{{id}}
 Content-Type: application/json
 
 {
-   "id": 5,
-   "name": "New Hotel Advanced",
-   "address": "New Street 22",
-   "rating": 4.3  
+  //UpdateCountryDto
 }
 
 ###
+
+GET {{HotelListingAPI_HostAddress}}/api/hotel
+Authorization:Basic dXNlcjFAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
+
+###
+
+POST {{HotelListingAPI_HostAddress}}/api/hotel
+Content-Type: application/json
+
+{
+  "Name": "New Hotel Beach",
+  "Address": "Beach Street 11",
+  "Rating": 3.3,
+  "CountryId":2
+}
+
+###
+
+DELETE {{HotelListingAPI_HostAddress}}/api/hotel/{{id}}
+
+###
+GET {{HotelListingAPI_HostAddress}}/api/hotel/{{id}}
+
+###
+PUT {{HotelListingAPI_HostAddress}}/api/hotel/{{id}}
+Content-Type: application/json
+{
+  "Id":4,
+  "Name": "New Hotel Beach 2",
+  "Address": "Beach Street 11",
+  "Rating": 3.3,
+  "CountryId":2
+}
+
+###
+
+POST {{HotelListingAPI_HostAddress}}/api/auth/register
+Content-Type: {{json}}
+{
+    "email":"user1@localhost.com",
+    "password":"P@ssword1",
+    "firstName":"First",
+    "lastName":"Last"
+}
+
+###
+
+POST {{HotelListingAPI_HostAddress}}/api/auth/login
+Content-Type: {{json}}
+{
+    "email":"user1@localhost.com",
+    "password":"P@ssword1"
+}
