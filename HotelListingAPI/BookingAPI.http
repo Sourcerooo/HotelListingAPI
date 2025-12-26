@@ -1,0 +1,149 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@HostAddress = https://localhost:7262
+@json=application/json
+@hotelId=6
+@bookingId=1
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlN2Y5OWY5YS1iZDdlLTRmY2YtYjBkZS1kODExZTE2MzkyNzEiLCJlbWFpbCI6ImhvdGVsQWRtaW41QGhvdGVsNi5jb20iLCJqdGkiOiIwM2UyNjhhMy00ZWY4LTRkY2EtYjJiYi0xNDRiOTIxNzZkNjQiLCJuYW1lIjoiSG90ZWwgQWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJIb3RlbCBBZG1pbiIsImV4cCI6MTc2Njc1OTU2OSwiaXNzIjoiSG90ZWxMaXN0aW5nQXBpIiwiYXVkIjoiSG90ZWxMaXN0aW5nQXBpQ2xpZW50In0.DKJxIa2B3t8jXdvsD209cDBejYqgBK798TAZjQC6Dqg
+@today={{$localDatetime iso8601}}
+
+//Register admin user
+POST {{HostAddress}}/api/auth/register
+Content-Type: {{json}}
+{
+    "email":"hotelAdmin5@hotel6.com",
+    "password":"P@ssword1",
+    "firstName":"Hotel",
+    "lastName":"Admin",
+    "Role":"Hotel Admin",
+    "AssociatedHotelId":{{hotelId}}
+}
+
+###
+
+//Register user
+POST {{HostAddress}}/api/auth/register
+Content-Type: {{json}}
+{
+    "email":"user1@me.com",
+    "password":"P@ssword1",
+    "firstName":"User",
+    "lastName":"One",
+    "Role":"User"
+}
+
+###
+// Login as admin user
+POST {{HostAddress}}/api/auth/login
+Content-Type: {{json}}
+{
+    "email":"hotelAdmin5@hotel6.com",
+    "password":"P@ssword1"
+}
+###
+// Login as user
+POST {{HostAddress}}/api/auth/login
+Content-Type: {{json}}
+{
+    "email":"user1@me.com",
+    "password":"P@ssword1"
+}
+###
+
+/////////////////   Regular User Cases //////////////////
+// Get all Bookings for user
+GET {{HostAddress}}/api/hotel/{{hotelId}}/bookings
+Authorization: Bearer {{token}}
+###
+// Create Booking
+POST {{HostAddress}}/api/hotel/{{hotelId}}/bookings
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "HotelId": {{hotelId}},
+    "CheckInDate": "2025-06-01",
+    "CheckOutDate": "2025-06-03",
+    "NumberOfGuests": 2
+}
+###
+// Update Booking
+PUT {{HostAddress}}/api/hotel/{{hotelId}}/bookings/{{bookingId}}
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "CheckInDate": "2025-06-01",
+    "CheckOutDate": "2025-06-04",
+    "NumberOfGuests": 3
+}
+###
+// Create Overlapping Booking
+POST {{HostAddress}}/api/hotel/{{hotelId}}/bookings
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "HotelId": {{hotelId}},
+    "CheckInDate": "2025-06-02",
+    "CheckOutDate": "2025-06-08",
+    "NumberOfGuests": 2
+}
+###
+// Create Second Booking
+POST {{HostAddress}}/api/hotel/{{hotelId}}/bookings
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "HotelId": {{hotelId}},
+    "CheckInDate": "2025-06-04",
+    "CheckOutDate": "2025-06-08",
+    "NumberOfGuests": 2
+}
+###
+// Update Second Overlapping Booking
+PUT {{HostAddress}}/api/hotel/{{hotelId}}/bookings/2
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "CheckInDate": "2025-06-03",
+    "CheckOutDate": "2025-06-10",
+    "NumberOfGuests": 2
+}
+###
+// Update Secont Booking
+PUT {{HostAddress}}/api/hotel/{{hotelId}}/bookings/2
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "CheckInDate": "2025-06-04",
+    "CheckOutDate": "2025-06-10",
+    "NumberOfGuests": 2
+}
+###
+// Cancel Booking
+PUT {{HostAddress}}/api/hotel/{{hotelId}}/bookings/{{bookingId}}/cancel
+Authorization: Bearer {{token}}
+###
+// Create overlaping Booking after cancellation
+POST {{HostAddress}}/api/hotel/{{hotelId}}/bookings
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+{
+    "HotelId": {{hotelId}},
+    "CheckInDate": "2025-06-01",
+    "CheckOutDate": "2025-06-03",
+    "NumberOfGuests": 2
+}
+###
+
+/////////////////    Admin User Cases //////////////////
+// Admin gets all bookings
+GET {{HostAddress}}/api/hotel/{{hotelId}}/bookings/admin
+Authorization: Bearer {{token}}
+###
+// Admin confirms booking
+PUT {{HostAddress}}/api/hotel/{{hotelId}}/bookings/3/admin/confirm/
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+###
+// Admin cancels booking
+PUT {{HostAddress}}/api/hotel/{{hotelId}}/bookings/2/admin/cancel
+Authorization: Bearer {{token}}
+###

@@ -3,12 +3,36 @@ using HotelListingAPI.Contracts;
 using HotelListingAPI.Data;
 using HotelListingAPI.DTO.Auth;
 using HotelListingAPI.Results;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Identity.Client;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace HotelListingAPI.Services;
 
-public class UserService(UserManager<ApplicationUser> userManager) : IUserService
+public class UserService(UserManager<ApplicationUser> userManager,
+    HotelListingDbContext dbContext,
+    IConfiguration configuration,
+    IHttpContextAccessor httpContextAccessor) : IUserService
 {
+    public string UserId
+    {
+        get
+        {
+            return httpContextAccessor?
+           .HttpContext?
+           .User?
+           .FindFirst(JwtRegisteredClaimNames.Sub)?
+           .Value
+           ?? httpContextAccessor ?
+           .HttpContext?
+           .User?
+           .FindFirst(ClaimTypes.NameIdentifier)?
+           .Value
+           ?? string.Empty;
+        }
+    }
     public async Task<Result<RegisteredUserDto>> RegisterAsync(RegisterUserDto registerUserDto)
     {
         var user = new ApplicationUser
@@ -25,12 +49,26 @@ public class UserService(UserManager<ApplicationUser> userManager) : IUserServic
             return Result<RegisteredUserDto>.BadRequest(errors);
         }
 
+        await userManager.AddToRoleAsync(user, registerUserDto.Role);
+
+        if(registerUserDto.Role == "Hotel Admin")
+        {
+            var hotelAdmin = dbContext.HotelAdmins.Add(
+                new HotelAdmin
+                {
+                    UserId = user.Id,
+                    HotelId = registerUserDto.AssociatedHotelId.GetValueOrDefault()
+                });
+            await dbContext.SaveChangesAsync();
+        }
+
         return Result<RegisteredUserDto>.Success(new RegisteredUserDto
         {
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Id = user.Id
+            Id = user.Id,
+            Role = registerUserDto.Role
         });
     }
 
@@ -47,6 +85,43 @@ public class UserService(UserManager<ApplicationUser> userManager) : IUserServic
         {
             return Result<string>.Failure(new Error(ErrorCodes.BadRequest, "Invalid Credentials"));
         }
-        return Result<string>.Success("Login Successful");
+        var token = await GenerateJwtTokenAsync(user);
+        return Result<string>.Success(token);
+    }
+
+    private async Task<string> GenerateJwtTokenAsync(ApplicationUser user)
+    {
+        //Basic user claims
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Email??string.Empty),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Name, user.FullName)
+        };
+
+        //Add roles claims
+        var roles = await userManager.GetRolesAsync(user);
+        var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
+        claims = claims.Union(roleClaims).ToList();
+
+        //Set JWT token settings
+        var securityKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"])
+            );
+        var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(
+                securityKey,
+                Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256
+            );
+
+        var token = new JwtSecurityToken(
+            issuer: configuration["JwtSettings:Issuer"],
+            audience: configuration["JwtSettings:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(configuration["JwtSettings:DurationInMinutes"])),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

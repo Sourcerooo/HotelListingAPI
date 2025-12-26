@@ -1,8 +1,9 @@
 @HotelListingAPI_HostAddress = https://localhost:7262
-@json = application/json
+@json=application/json
+@API_KEY=bW8yMzQ1c3ZqbzIzd3Jmc2RkZnBrZXJwdDQy
 
 GET {{HotelListingAPI_HostAddress}}/api/country
-
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYjdkODE2NC01NzNkLTQ5MTMtOTRlNC1lYTg3MjA2MmUyZDQiLCJlbWFpbCI6ImFkbWluMkBsb2NhbGhvc3QuY29tIiwianRpIjoiZWRmOWExNzItNWU3My00Zjk3LThlMWItOTRlOWY3NTUxY2Y3IiwibmFtZSI6IkZpcnN0IExhc3QiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzY2NzUzOTM0LCJpc3MiOiJIb3RlbExpc3RpbmdBcGkiLCJhdWQiOiJIb3RlbExpc3RpbmdBcGlDbGllbnQifQ.4cx0UyIq2TmQTfVzqA-WTPtNgPWWAORvAXddIyiGD-U
 ###
 
 POST {{HotelListingAPI_HostAddress}}/api/country
@@ -14,9 +15,9 @@ Content-Type: application/json
 }
 
 ###
-
+@id=7
 DELETE {{HotelListingAPI_HostAddress}}/api/country/{{id}}
-
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYjdkODE2NC01NzNkLTQ5MTMtOTRlNC1lYTg3MjA2MmUyZDQiLCJlbWFpbCI6ImFkbWluMkBsb2NhbGhvc3QuY29tIiwianRpIjoiZWRmOWExNzItNWU3My00Zjk3LThlMWItOTRlOWY3NTUxY2Y3IiwibmFtZSI6IkZpcnN0IExhc3QiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzY2NzUzOTM0LCJpc3MiOiJIb3RlbExpc3RpbmdBcGkiLCJhdWQiOiJIb3RlbExpc3RpbmdBcGlDbGllbnQifQ.4cx0UyIq2TmQTfVzqA-WTPtNgPWWAORvAXddIyiGD-U
 ###
 
 GET {{HotelListingAPI_HostAddress}}/api/country/{{id}}
@@ -33,8 +34,9 @@ Content-Type: application/json
 ###
 
 GET {{HotelListingAPI_HostAddress}}/api/hotel
-Authorization:Basic dXNlcjFAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
-
+#X-Api-Key: {{API_KEY}}
+#Authorization:Basic dXNlcjFAbG9jYWxob3N0LmNvbTpQQHNzd29yZDE=
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYjdkODE2NC01NzNkLTQ5MTMtOTRlNC1lYTg3MjA2MmUyZDQiLCJlbWFpbCI6ImFkbWluMkBsb2NhbGhvc3QuY29tIiwianRpIjoiZWRmOWExNzItNWU3My00Zjk3LThlMWItOTRlOWY3NTUxY2Y3IiwibmFtZSI6IkZpcnN0IExhc3QiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzY2NzUzOTM0LCJpc3MiOiJIb3RlbExpc3RpbmdBcGkiLCJhdWQiOiJIb3RlbExpc3RpbmdBcGlDbGllbnQifQ.4cx0UyIq2TmQTfVzqA-WTPtNgPWWAORvAXddIyiGD-U
 ###
 
 POST {{HotelListingAPI_HostAddress}}/api/hotel
@@ -48,8 +50,8 @@ Content-Type: application/json
 }
 
 ###
-
 DELETE {{HotelListingAPI_HostAddress}}/api/hotel/{{id}}
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZTE1ZWJiNC1iNzYxLTRlOWUtODRjOC0yYjBiMjFjNzE1MjkiLCJlbWFpbCI6InVzZXIxQGxvY2FsaG9zdC5jb20iLCJqdGkiOiI4ZWE1NDllNC1iNmEzLTQ2ODctYjUwNS03NTMzMzY3YTY2MTIiLCJuYW1lIjoiRmlyc3QgTGFzdCIsImV4cCI6MTc2NTM3NjM5NywiaXNzIjoiSG90ZWxMaXN0aW5nQXBpIiwiYXVkIjoiSG90ZWxMaXN0aW5nQXBpQ2xpZW50In0.Gea_bXbx2F9PA61QDLj3330Rb1EhQojftGp2kSyiIzo
 
 ###
 GET {{HotelListingAPI_HostAddress}}/api/hotel/{{id}}
@@ -70,10 +72,11 @@ Content-Type: application/json
 POST {{HotelListingAPI_HostAddress}}/api/auth/register
 Content-Type: {{json}}
 {
-    "email":"user1@localhost.com",
+    "email":"admin2@localhost.com",
     "password":"P@ssword1",
     "firstName":"First",
-    "lastName":"Last"
+    "lastName":"Last",
+    "Role":"Administrator"
 }
 
 ###
@@ -81,6 +84,6 @@ Content-Type: {{json}}
 POST {{HotelListingAPI_HostAddress}}/api/auth/login
 Content-Type: {{json}}
 {
-    "email":"user1@localhost.com",
+    "email":"admin2@localhost.com",
     "password":"P@ssword1"
 }

@@ -26,7 +26,8 @@ public abstract class BaseApiController() : ControllerBase
             ErrorCodes.BadRequest => BadRequest(e.Description),
             ErrorCodes.Validation => BadRequest(e.Description),
             ErrorCodes.Conflict => Conflict(e.Description),
-            _ => Problem(detail: string.Join("; ", errors.Select(x => x.Description)), title: e.Code)
+            ErrorCodes.Forbidden => Forbid(e.Description),
+    _ => Problem(detail: string.Join("; ", errors.Select(x => x.Description)), title: e.Code)
         };
 
     }

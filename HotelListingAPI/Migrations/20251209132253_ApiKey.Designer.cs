@@ -4,6 +4,7 @@ using HotelListingAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelListingAPI.Migrations
 {
     [DbContext(typeof(HotelListingDbContext))]
-    partial class HotelListingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209132253_ApiKey")]
+    partial class ApiKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,55 +130,6 @@ namespace HotelListingAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HotelListingAPI.Data.Booking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateOnly>("CheckInDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("CheckOutDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfGuests")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("CheckInDate", "CheckOutDate");
-
-                    b.ToTable("Bookings");
-                });
-
             modelBuilder.Entity("HotelListingAPI.Data.Country", b =>
                 {
                     b.Property<int>("CountryId")
@@ -216,9 +170,6 @@ namespace HotelListingAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PricePerNight")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<double>("Rating")
                         .HasColumnType("float");
 
@@ -227,30 +178,6 @@ namespace HotelListingAPI.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Hotels");
-                });
-
-            modelBuilder.Entity("HotelListingAPI.Data.HotelAdmin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("HotelAdmins");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -278,29 +205,6 @@ namespace HotelListingAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "8d04dce2-969a-435d-bba4-df3f325983dc",
-                            ConcurrencyStamp = "3b668ac5-46a2-442e-9578-4d9a4ba54aa1",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "f4b2c5e4-8c3f-4b2e-9c5e-4b2c5e4b2c5",
-                            ConcurrencyStamp = "d74103ec-999e-42e4-9bd8-95351219d330",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "f4b2c5e4-8c3f-4b2e-9c5e-4b2c5e4b2c6",
-                            ConcurrencyStamp = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-                            Name = "Hotel Admin",
-                            NormalizedName = "HOTEL ADMIN"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -409,25 +313,6 @@ namespace HotelListingAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HotelListingAPI.Data.Booking", b =>
-                {
-                    b.HasOne("HotelListingAPI.Data.Hotel", "Hotel")
-                        .WithMany("Bookings")
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HotelListingAPI.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("HotelListingAPI.Data.Hotel", b =>
                 {
                     b.HasOne("HotelListingAPI.Data.Country", "Country")
@@ -437,25 +322,6 @@ namespace HotelListingAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("HotelListingAPI.Data.HotelAdmin", b =>
-                {
-                    b.HasOne("HotelListingAPI.Data.Hotel", "Hotel")
-                        .WithMany("Admins")
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HotelListingAPI.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -512,13 +378,6 @@ namespace HotelListingAPI.Migrations
             modelBuilder.Entity("HotelListingAPI.Data.Country", b =>
                 {
                     b.Navigation("Hotels");
-                });
-
-            modelBuilder.Entity("HotelListingAPI.Data.Hotel", b =>
-                {
-                    b.Navigation("Admins");
-
-                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }
